@@ -9,7 +9,7 @@ import java.util.Date;
 public class StringUtil {
     public static long convertToMillis(String timeString) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = sdf.parse(timeString);
             return date.getTime();
         }catch (Exception e){
@@ -18,7 +18,7 @@ public class StringUtil {
     }
 
     public static String convertToString(long millis) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(millis);
         return sdf.format(date);
     }

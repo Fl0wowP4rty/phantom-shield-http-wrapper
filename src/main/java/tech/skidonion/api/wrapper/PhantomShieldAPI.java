@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class PhantomShieldAPI {
 
-    private static final String URL = "https://skidonion.tech/api/admin/";
+    private String URL = "https://skidonion.tech/api/admin/";
     private final String userId, token;
     private final HttpClient httpClient;
 
@@ -38,6 +38,11 @@ public class PhantomShieldAPI {
         this.httpClient = new HttpClient();
         this.httpClient.addHeader("phantom-shield-x-uid", userId);
         this.httpClient.addHeader("phantom-shield-x-api-token", token);
+    }
+
+    public PhantomShieldAPI(String userId, String token,String baseUrl) {
+        this(userId,token);
+        this.URL = baseUrl;
     }
 
     /**
