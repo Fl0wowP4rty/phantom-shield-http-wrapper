@@ -45,6 +45,11 @@ public class PhantomShieldAPI {
         this.URL = baseUrl;
     }
 
+    public PhantomShieldAPI setProxy(String host,int port){
+        this.httpClient.setProxy(host,port);
+        return this;
+    }
+
     /**
      * 绑定软件ID到示例，绑定后可以不传入softwareId参数
      *

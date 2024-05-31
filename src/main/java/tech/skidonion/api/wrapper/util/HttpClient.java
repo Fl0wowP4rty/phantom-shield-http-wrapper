@@ -1,20 +1,16 @@
 package tech.skidonion.api.wrapper.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class HttpClient {
 
-    private final Map<String,String> commonHeader = new HashMap<>();
+    private final Map<String, String> commonHeader = new HashMap<>();
+    private Proxy proxy;
 
-    public HttpClient(){
+    public HttpClient() {
         commonHeader.put("User-agent", "Mozilla/5.0 AppIeWebKit");
     }
 
@@ -22,8 +18,18 @@ public class HttpClient {
         this.commonHeader.put(key,value);
     }
 
+    public void setProxy(String host, int port) {
+        SocketAddress proxyAddress = new InetSocketAddress(host, port);
+        this.proxy = new Proxy(Proxy.Type.HTTP, proxyAddress);
+    }
+
     private HttpURLConnection createUrlConnection(URL url, int time) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection;
+        if (proxy != null) {
+            connection = (HttpURLConnection) url.openConnection(proxy);
+        } else {
+            connection = (HttpURLConnection) url.openConnection();
+        }
         connection.setConnectTimeout(time);
         connection.setReadTimeout(time);
         connection.setUseCaches(false);
@@ -65,12 +71,12 @@ public class HttpClient {
             }
 
             return result;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void closeQuietly(InputStream inputStream) {
+    private void closeQuietly(InputStream inputStream) {
         if (inputStream != null) {
             try {
                 inputStream.close();
@@ -79,7 +85,7 @@ public class HttpClient {
         }
     }
 
-    public String toString(InputStream inputStream) throws IOException {
+    private String toString(InputStream inputStream) throws IOException {
         Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name());
         scanner.useDelimiter("\\A");
         String result = scanner.hasNext() ? scanner.next() : "";
